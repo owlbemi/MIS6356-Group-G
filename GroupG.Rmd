@@ -1,0 +1,15 @@
+---
+title: "GroupG"
+output: html_document
+---
+
+# Required packages
+
+```{r}
+# run remotes::install_github("benyamindsmith/RKaggle")
+library(RKaggle)
+```
+
+```{r}
+raw_df <- get_dataset("sahilislam007/ai-impact-on-job-market-20242030")
+```
