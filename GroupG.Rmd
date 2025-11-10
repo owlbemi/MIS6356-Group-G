@@ -2,6 +2,9 @@
 title: "GroupG"
 output: html_document
 ---
+# Config Git
+``git config --global user.name "Your Name"``
+``git config --global user.email "your.email@example.com"``
 
 # Required packages
 
@@ -9,6 +12,10 @@ output: html_document
 # run remotes::install_github("benyamindsmith/RKaggle")
 library(RKaggle)
 ```
+
+# Importing Data
+
+Reference: https://www.kaggle.com/datasets/sahilislam007/ai-impact-on-job-market-20242030
 
 ```{r}
 raw_df <- get_dataset("sahilislam007/ai-impact-on-job-market-20242030")
