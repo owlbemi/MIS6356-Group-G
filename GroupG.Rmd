@@ -13,6 +13,7 @@ output: html_document
 library(RKaggle)
 library(dplyr)
 library(tidyr)
+library(caret)
 ```
 
 # Importing Data
@@ -57,5 +58,43 @@ head(df)
 
 summary(df)
 ```
+# Train / Test Data
   
+```{r}
+# set random seed for ML
+set.seed(2021)
 
+train_index <- sample(1:nrow(df), 0.6 * nrow(df))
+
+train.df <- df[train_index, ]
+test.df <- df[-train_index, ]
+
+# Run Logreg
+
+logit.reg <- glm(`Job Status` ~ `AI Impact Level` + `Median Salary (USD)` + `Required Education` + `Experience Required (Years)` + `Job Openings (2024)` + `Projected Openings (2030)` + `Remote Work Ratio (%)` + `Automation Risk (%)` + `Gender Diversity (%)`, 
+                 data = train.df, 
+                 family = "binomial")
+
+summary(logit.reg)
+```
+
+# Prediction
+
+```{r}
+logitPredict <- predict(logit.reg, test.df, type = "response")
+
+summary(logitPredict)
+
+logitPredictClass <- ifelse(logitPredict > 0.5, 1, 0)
+```
+
+# Confusion Matrix
+
+```{r}
+actual <- test.df$`Job Status`
+predict <- logitPredictClass
+cm <- table(predict, actual)
+
+cm
+
+```
