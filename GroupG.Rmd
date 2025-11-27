@@ -73,6 +73,95 @@ summary(df)
 names(df)
 ```
 
+# Data Exploration 
+
+```{r}
+data <- df
+
+#St Deviation for each numeric variable
+sapply(data[, sapply(data, is.numeric)], sd, na.rm = TRUE)
+
+
+#Identify numeric columns automatically
+numeric_data <- data[, sapply(data, is.numeric)]
+
+#Get min, max, mean, quartiles (summary)
+summary(numeric_data)
+
+
+#Get Standard Deviation for each variable
+sapply(numeric_data, sd, na.rm = TRUE)
+
+#Step 1: Load Packages 
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+
+#Step 2: Keep only the numeric columns you need
+box_data <- data %>%
+  select(
+  `Median Salary (USD)`,
+  `Experience Required (Years)`,
+  `Job Openings (2024)`,
+  `Projected Openings (2030)`,
+  `Remote Work Ratio (%)`,
+  `Automation Risk (%)`,
+  `Gender Diversity (%)`
+)
+
+
+#Step 3: Reshape data into log format 
+box_long <- box_data %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "Metric",
+    values_to = "Value"
+)
+
+
+
+#Step 4: Create faceted boxplots
+ggplot(box_long, aes(x = Metric, y = Value, fill = Metric)) +
+  geom_boxplot(outlier.color = "red", outlier.shape = 16) +
+  facet_wrap(~ Metric, scales = "free", ncol = 3) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position = "none",
+    strip.text = element_text(face = "bold", size = 12),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank()
+  ) +
+  labs(
+    title = "Distribution of Job Market Metrics",
+    y = "Value",
+    x = ""
+  )
+
+#Step 5: Add annotations or median labels
+box_long_summary <- box_long %>%
+  group_by(Metric) %>%
+  summarize(median_val = median(Value, na.rm = TRUE))
+
+ggplot(box_long, aes(x = Metric, y = Value, fill = Metric)) +
+  geom_boxplot(outlier.color = "red") +
+  geom_text(
+    data = box_long_summary,
+    aes(x = Metric, y = median_val, label = round(median_val, 1)),
+    color = "black",
+    size = 3,
+    vjust = -0.7
+  ) +
+  facet_wrap(~ Metric, scales = "free", ncol = 3) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position = "none",
+    strip.text = element_text(face = "bold")
+  ) +
+  labs(title = "Faceted Boxplots with Median Values", x = "", y = "Value")
+
+```
+
 # Decision Tree
 ## Selecting Features
 
