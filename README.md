@@ -1,2 +1,2 @@
 # MIS6356-GrpGProject
-Group Project for OPRE6359.006 Group G
+Group Project for MIS6356 Group G
